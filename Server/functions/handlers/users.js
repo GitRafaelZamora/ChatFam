@@ -6,7 +6,7 @@ firebase.initializeApp(config);
 
 const { validateSignUpData, validateLoginData, reduceUserDetails } = require('../util/validators');
 
-exports.SignUp = (req, res) => {
+exports.signup = (req, res) => {
     const user = {
         email: req.body.email,
         password: req.body.password,
@@ -57,7 +57,7 @@ exports.SignUp = (req, res) => {
         });
 };
 
-exports.Login = (req, res) => {
+exports.login = (req, res) => {
     const user = {
         email: req.body.email,
         password: req.body.password
@@ -158,7 +158,7 @@ exports.getAuthenticatedUser = (req, res) => {
             if (doc.exists) {
                 userData.credentials = doc.data();
                 // TODO: Get Likes
-                return db.collection('likes').where('userHandle', '==', req.user.handle).get();
+                return db.collection('likes').where('handle', '==', req.user.handle).get();
             }
         })
         .then(data => {
