@@ -1,31 +1,54 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 
-const { getAllPosts, Post, getPost, comment, deletePost, likePost, unlikePost } = require('./handlers/posts');
-const { Login, SignUp, uploadImage, addUserDetails, getAuthenticatedUser } = require('./handlers/users');
-const { FBAuth } = require('./util/fbAuth');
+const { getAllPosts, post, getPost, comment, deletePost, like, unlike } = require('./handlers/posts');
+const { login, signup, uploadImage, addUserDetails, getAuthenticatedUser } = require('./handlers/users');
+const { FBAuth} = require('./util/fbAuth');
+const { db } = require('./util/admin')
 
-
-
-
-
-app.get('/posts', getAllPosts);
-app.post('/post', FBAuth, Post);
-app.get('/post/:postID', getPost);
-app.post('/post/:postID/comment', FBAuth, comment);
-app.post('/post/:postID/delete', FBAuth, deletePost);
-app.get('/post/:postID/like', FBAuth, likePost);
-app.get('/post/:postID/unlike', FBAuth, unlikePost);
-
-//TODO: delete post
 // TODO: like post
 // TODO: unlike a post
-// TODO: comment a post
+// All the services that interact with Post data.
+app.get('/posts', getAllPosts);
+app.post('/post', FBAuth, post);
+app.get('/post/:postID', getPost);
+app.post('/post/:postID/comment', FBAuth, comment);
+app.delete('/post/:postID/delete', FBAuth, deletePost);
+app.get('/post/:postID/like', FBAuth, like);
+app.get('/post/:postID/unlike', FBAuth, unlike);
 
-app.post('/signup', SignUp);
-app.post('/login', Login);
+// All the services that interact with User data.
+app.post('/signup', signup);
+app.post('/login', login);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
 
 exports.api = functions.https.onRequest(app);
+
+exports.createNotificationOnLike = functions.firestore.document('/likes/{id}')
+    .onCreate((snapshot) => {
+        db.doc(`/screams/${snapshot.data().postID}`)
+            .get()
+            .then(doc => {
+                if (doc.exists) {
+                    return db.doc(`/notifications/${snapshot.id}`).set({
+                        createdAt: new Date().toISOString(),
+                        recipient: doc.data().handle,
+                        sender: snapshot.data().handle,
+                        read: false,
+                        postID: doc.id,
+                        type: 'like'
+                    })
+                }
+            })
+            .then(() => {
+                return;
+            })
+            .catch(err => {
+                console.error(err);
+                return
+            })
+    });
+
+// TODO: NOTIFICATIONS for onComment, unlike
