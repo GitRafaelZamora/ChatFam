@@ -63,7 +63,7 @@ exports.login = (req, res) => {
         password: req.body.password
     };
 
-    const {valid, errors} = validateLoginData(user);
+    const { errors, valid } = validateLoginData(user);
 
     if (!valid) return res.status(400).json(errors);
 
@@ -75,12 +75,11 @@ exports.login = (req, res) => {
             return res.json({ token });
         })
         .catch(err => {
-            if (err.code === 'auth/wrong-password') {
-                return res.status(403).json({ general: 'Wrong Credentials, please try again.' });
-            } else {
-                console.error(err);
-                return res.status(500).json({ error: err.code });
-            }
+            // if (err.code === 'auth/wrong-password') {
+            //     return res.status(403).json({ general: 'Wrong Credentials, please try again.' });
+            // }
+            console.log(err);
+            return res.status(403).json({ general: 'Wrong credentials, please try again' });
         });
 };
 
@@ -162,6 +161,7 @@ exports.getAuthenticatedUser = (req, res) => {
                         .where('handle', '==', req.user.handle)
                         .get();
             }
+            return;
         })
         .then(data => {
             userData.likes = [];

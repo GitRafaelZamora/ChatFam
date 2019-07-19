@@ -41,6 +41,7 @@ exports.createNotificationOnLike = functions.firestore.document('/likes/{id}')
                         type: 'like'
                     })
                 }
+                return;
             })
             .then(() => {
                 return;

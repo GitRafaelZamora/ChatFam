@@ -9,7 +9,10 @@ exports.getAllPosts = (req, res) => {
                     postID: doc.id,
                     body: doc.data().body,
                     handle: doc.data().handle,
-                    createdAt: doc.data().createdAt
+                    createdAt: doc.data().createdAt,
+                    imgURL: doc.data().imgURL,
+                    likeCount: doc.data().likeCount,
+                    commentCount: doc.data().commentCount
                 });
             });
             return res.json(posts);
@@ -96,7 +99,7 @@ exports.deletePost = (req, res) => {
 }
 
 exports.comment = (req, res) => {
-    if (req.body.body.trim() == '') return res.status(400).json({error: "Must not be empty."});
+    if (req.body.body.trim() === '') return res.status(400).json({error: "Must not be empty."});
     const comment = {
         body: req.body.body,
         createdAt: new Date().toISOString(),
@@ -117,7 +120,7 @@ exports.comment = (req, res) => {
             return db.collection('comments').add(comment);
         })
         .then(() => {
-            res.json(comment);
+            return res.json(comment);
         })
         .catch(err => {
             console.error(err);
@@ -141,7 +144,7 @@ exports.like = (req, res) => {
                 post.postID = doc.id;
                 return likeDocument.get();
             } else {
-                res.status(404).json({ error: 'Post not found.'} );
+                return res.status(404).json({ error: 'Post not found.'} );
             }
         })
         .then(data => {
@@ -185,7 +188,7 @@ exports.unlike = (req, res) => {
                 post.postID = doc.id;
                 return likeDocument.get();
             } else {
-                res.status(404).json({ error: 'Post not found.' })
+                return res.status(404).json({ error: 'Post not found.' })
             }
         })
         .then((data) => {
@@ -199,7 +202,7 @@ exports.unlike = (req, res) => {
                             return postDocument.update({ likeCount: post.likeCount })
                         })
                         .then(() => {
-                            res.json(post);
+                            return res.json(post);
                         });
             }
         })
