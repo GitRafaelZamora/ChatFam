@@ -21,6 +21,9 @@ exports.getAllPosts = (req, res) => {
 }
 
 exports.post = (req, res) => {
+    if (req.body.body.trim() === '') {
+        return res.status(400).json({ body: "Body must not be empty."});
+    }
     const post = {
         body: req.body.body,
         handle: req.user.handle,
@@ -179,7 +182,7 @@ exports.unlike = (req, res) => {
     const postDocument = db.doc(`/posts/${req.params.postID}`);
 
     let post;
-    console.log("postID : ", req.params.postID);
+    // console.log("postID : ", req.params.postID);
 
     postDocument.get()
         .then(doc => {
@@ -195,8 +198,7 @@ exports.unlike = (req, res) => {
             if (data.empty) {
                 return res.status(400).json({ error: 'Post not liked.' });
             } else {
-                return db.doc(`/likes/${data.docs[0].id}`)
-                        .delete()
+                return db.doc(`/likes/${data.docs[0].id}`).delete()
                         .then(() => {
                             post.likeCount--;
                             return postDocument.update({ likeCount: post.likeCount })
