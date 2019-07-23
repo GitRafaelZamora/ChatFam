@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Home from '@material-ui/icons/Home';
 import Notifications from '@material-ui/icons/Notifications';
+import Post from './Post';
 
 
 class Navbar extends Component {
@@ -21,15 +22,13 @@ class Navbar extends Component {
             <AppBar>
                 <Toolbar className="nav-container">
                     {authenticated ? (<>
-                        <ParentButton tip="Create Post">
-                            <AddIcon></AddIcon>
-                        </ParentButton>
+                        <Post></Post>
                         <Link to="/">
                             <ParentButton tip="Home">
                                 <Home></Home>
                             </ParentButton>
                         </Link>
-                        <ParentButton tip="Create Post">
+                        <ParentButton tip="Notifications">
                             <Notifications ></Notifications>
                         </ParentButton>
 

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 
 // Components
-import Post from '../components/Post'
+import Posts from '../components/Posts'
 import Profile from '../components/Profile'
 import { connect } from 'react-redux'
 import { getPosts } from '../redux/actions/dataActions'
@@ -19,11 +19,10 @@ class home extends Component {
         this.props.getPosts();
     }
 
-
     render() {
         const { posts, loading } = this.props.data;
         let postMarkup = !loading ? (
-            posts.map(post => <Post key={post.postID} post={post}></Post>)
+            posts.map(post => <Posts key={post.postID} post={post}></Posts>)
         ) : <p>Loading...</p>;
         return (
             <Grid container spacing={8}>

@@ -16,7 +16,8 @@ import { connect } from 'react-redux'
 
 const styles = {
     deleteButton: {
-        left: '80%',
+        left: '90%',
+        top: '10%',
         position: 'absolute'
     }
 }
