@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/ChatFam/static/css/main.d5305779.chunk.css",
+    "main.js": "/ChatFam/static/js/main.eadff1fc.chunk.js",
+    "main.js.map": "/ChatFam/static/js/main.eadff1fc.chunk.js.map",
+    "runtime~main.js": "/ChatFam/static/js/runtime~main.78a6abfa.js",
+    "runtime~main.js.map": "/ChatFam/static/js/runtime~main.78a6abfa.js.map",
+    "static/js/2.65c926fd.chunk.js": "/ChatFam/static/js/2.65c926fd.chunk.js",
+    "static/js/2.65c926fd.chunk.js.map": "/ChatFam/static/js/2.65c926fd.chunk.js.map",
+    "index.html": "/ChatFam/index.html",
+    "precache-manifest.9ce031b007ade77d8086a623509c6c32.js": "/ChatFam/precache-manifest.9ce031b007ade77d8086a623509c6c32.js",
+    "service-worker.js": "/ChatFam/service-worker.js",
+    "static/css/main.d5305779.chunk.css.map": "/ChatFam/static/css/main.d5305779.chunk.css.map",
+    "static/media/dragon.png": "/ChatFam/static/media/dragon.ab4bb912.png",
+    "static/media/goblin.png": "/ChatFam/static/media/goblin.46ab9754.png"
+  }
+}
