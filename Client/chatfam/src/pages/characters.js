@@ -6,6 +6,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -15,10 +16,12 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import monsters  from '../assets/monsters.json';
+import goblin from '../assets/goblin.png';
+
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: "50%",
-    margin: "50px",
+    maxWidth: 345,
   },
   media: {
     height: 0,
@@ -39,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PostCard(props) {
+export default function RecipeReviewCard() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -52,7 +55,7 @@ export default function PostCard(props) {
       <CardHeader
         avatar={
           <Avatar aria-label="Recipe" className={classes.avatar}>
-            R
+            G
           </Avatar>
         }
         action={
@@ -60,18 +63,17 @@ export default function PostCard(props) {
             <MoreVertIcon />
           </IconButton>
         }
-        
-        title={props.body}
-        subheader={props.createdAt}
+        title={monsters.goblin.name}
+        subheader={monsters.goblin.alignment}
       />
       <CardMedia
         className={classes.media}
-        image={props.imgURL}
-        title="Profile"
+        image={goblin}
+        title={monsters.goblin.name}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {props.body}
+          {monsters.goblin.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -92,6 +94,29 @@ export default function PostCard(props) {
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography paragraph>Stats:</Typography>
+          <Typography paragraph>
+            Strength: {monsters.goblin.stats.str}
+          </Typography>
+          <Typography paragraph>
+            Dexterity: {monsters.goblin.stats.dex}
+          </Typography>
+          <Typography paragraph>
+            Constitution: {monsters.goblin.stats.cpn}
+          </Typography>
+          <Typography paragraph>
+            Intelligence: {monsters.goblin.stats.int}
+          </Typography>
+          <Typography paragraph>
+            Wisdom: {monsters.goblin.stats.wis}
+          </Typography>
+          <Typography paragraph>
+            Charism: {monsters.goblin.stats.cha}
+          </Typography>
+        </CardContent>
+      </Collapse>
     </Card>
   );
 }

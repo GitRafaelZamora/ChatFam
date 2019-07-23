@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
+import PropTypes from 'prop-types'
 import icon from '../assets/dragon.png'
-import axios from 'axios'
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -10,6 +10,11 @@ import Grid from '@material-ui/core/Grid'
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
+// Redux stuff
+import { connect } from 'react-redux'
+import { loginUser } from '../redux/actions/userActions'
 
 
 const styles = {
@@ -28,12 +33,16 @@ const styles = {
         margin: '10px auto 10px auto',
     },
     button: {
-        marginTop: 20
+        marginTop: 20,
+        position: 'relative'
     },
     customError: {
         color: 'red',
         fontSize: '0.8rem',
         marginTop: '10px'
+    },
+    progress: {
+        position: 'absolute'
     }
 };
 
@@ -45,35 +54,24 @@ class login extends Component {
         this.state = {
             email: '',
             password: '',
-            loading: false,
             errors: {}
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.UI.errors) {
+            this.setState({ errors: nextProps.UI.errors });
         }
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
-
         const user = {
             email: this.state.email,
             password: this.state.password
-        }
-
+        };
         console.log(user)
-
-        axios.post('/login', user)
-            .then((res) => {
-                console.log(res.data);
-                this.setState({ loading: false });
-                this.props.history.push('/');
-            })
-            .catch(err => {
-                console.log(err.response.data)
-                this.setState({ 
-                    errors: err.response.data, 
-                    loading: false 
-                });
-            })
+        this.props.loginUser(user, this.props.history);
     }
 
     handleChange = (event) => {
@@ -83,8 +81,8 @@ class login extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state;
+        const { classes, UI: { loading } } = this.props;
+        const { errors } = this.state;
         return (
             <Grid container className={classes.form}>
                 <Grid item sm />
@@ -123,9 +121,14 @@ class login extends Component {
                                 {errors.general}
                             </Typography>
                         )}
-                        <Button type="submit" variant="contained" color="primary" className={classes.button}>
+                        <Button type="submit" variant="contained" color="primary" className={classes.button} disabled={loading}>
                             Login
+                            { loading &&
+                                <CircularProgress size={30} className={classes.progress} />
+                            }
                         </Button>
+                        <br />
+                        <small>don't have an accound ? sign up <Link to="/signup">here</Link></small>
                     </form>
                 </Grid>
                 <Grid item sm />
@@ -135,7 +138,19 @@ class login extends Component {
 }
 
 login.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(login);
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
+
+const mapActionsToProps = {
+    loginUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(login));
